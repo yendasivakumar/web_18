@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="products.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button>Cart</button>
+    <div id="container"></div>
+  </body>
+</html>
+<script>
+  var products = document.querySelector("#container");
+  var productData = JSON.parse(localStorage.getItem("women"));
+
+  displayData(productData);
+
+  function displayData(productData) {
+    products.innerHTML = "";
+
+    productData.forEach(function (element) {
+      var card = document.createElement("div");
+
+      var img = document.createElement("img");
+      img.setAttribute("src", element.img);
+
+      var brand = document.createElement("h3");
+      brand.textContent = element.brand;
+
+      var name = document.createElement("p");
+      name.textContent = element.name;
+
+      var div = document.createElement("div");
+
+      var price = document.createElement("p");
+      price.textContent = element.price;
+
+      var catagory = document.createElement("p");
+      catagory.textContent = element.catagory;
+
+      div.append(price, catagory);
+
+      var cart = document.createElement("button");
+      cart.textContent = "Add to cart";
+      cart.addEventListener("click", function () {
+        addToCart(element);
+      });
+
+      card.append(img, brand, name, div, cart);
+
+      products.append(card);
+    });
+  }
+
+  var cartArr = JSON.parse(localStorage.getItem("cartItems")) || [];
+  function addToCart(element) {
+    cartArr.push(element);
+    localStorage.setItem("cartItems", JSON.stringify(cartArr));
+  }
+
+  document.querySelector("button").addEventListener("click", function () {
+    window.location.href = "cart.html";
+  });
+</script>

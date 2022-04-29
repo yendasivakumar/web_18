@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="cart.css" />
+    <title>cart</title>
+  </head>
+  <body>
+    <div id="page">
+      <div id="container"></div>
+      <div id="bill">
+        <div id="button">
+          <button id="discount">Click Here 30% OFF</button>
+          <p></p>
+        </div>
+
+        <div class="mrp">
+          <p>Total MRP</p>
+          <p id="total">Total</p>
+        </div>
+        <div class="disc">
+          <p>Discount</p>
+          <p id="disc">0</p>
+        </div>
+        <hr />
+        <div class="total">
+          <p>Total</p>
+          <p id="finalAmount">Total</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  var productData = JSON.parse(localStorage.getItem("cartItems"));
+  var products = document.querySelector("#container");
+
+  displayData(productData);
+
+  function displayData(productData) {
+    products.innerHTML = "";
+
+    productData.forEach(function (element) {
+      var card = document.createElement("div");
+
+      var img = document.createElement("img");
+      img.setAttribute("src", element.img);
+
+      var brand = document.createElement("h3");
+      brand.textContent = element.brand;
+
+      var name = document.createElement("p");
+      name.textContent = element.name;
+
+      var div = document.createElement("div");
+
+      var price = document.createElement("p");
+      price.textContent = element.price;
+
+      var catagory = document.createElement("p");
+      catagory.textContent = element.catagory;
+
+      div.append(price, catagory);
+
+      var cart = document.createElement("button");
+      cart.textContent = "Delete";
+      cart.addEventListener("click", function () {
+        deleteFrom(element.productID);
+      });
+
+      card.append(img, brand, name, div, cart);
+
+      products.append(card);
+    });
+
+    function deleteFrom(id) {
+      productData = productData.filter(function (element) {
+        return element.productID != id;
+      });
+      displayData(productData);
+      localStorage.setItem("cartItems", JSON.stringify(productData));
+      window.location.reload();
+    }
+  }
+
+  displayBill(productData);
+
+  function displayBill(productData) {
+    var total = 0;
+    productData.forEach(function (element) {
+      total += +element.price;
+    });
+    document.querySelector("#finalAmount").textContent = total;
+
+    document.querySelector("#total").textContent = total;
+    document.querySelector("#discount").addEventListener("click", function () {
+      total = total - (total * 30) / 100;
+      var disc = Math.trunc((total * 30) / 100);
+      document.querySelector("#disc").textContent = disc;
+      document.querySelector("#finalAmount").textContent = total;
+      document.querySelector("#button").innerHTML = "";
+    });
+  }
+</script>
